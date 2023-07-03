@@ -20,7 +20,6 @@ public class Main {
 
         int ids[] = new int[toysList.size()];
         ids = fillIds(toysList);
-        System.out.println(ids);
 
         String names[] = new String[toysList.size()];
         names = fillNames(toysList);
@@ -80,10 +79,11 @@ public class Main {
         try (PrintWriter writer = new PrintWriter(new File("result.txt"))) {
             Random random = new Random();
             for (int i = 0; i < 10; i++) {
-                int randomNumber = random.nextInt() * 10;
+                int randomNumber = random.nextInt();
                 Toy toy = commonqueue.peek();
                 if (toy != null && randomNumber < toy.getFrequency()) {
                     writer.println(commonqueue.poll().getId());
+                    commonqueue.offer(toy);
                 } else {
                     writer.println("1");
                 }
