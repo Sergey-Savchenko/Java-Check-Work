@@ -30,13 +30,13 @@ public class Main {
         Queue<Toy> toyQueue = new PriorityQueue<>();
         toyQueue = makeQueue(toysList);
 
-        Queue<Toy> commonQueue = new LinkedList<>();
+        // Queue<Toy> commonQueue = new LinkedList<>();
 
-        while (!toyQueue.isEmpty()) {
-            commonQueue.offer(toyQueue.poll());
-        }
+        // while (!toyQueue.isEmpty()) {
+        //     commonQueue.offer(toyQueue.poll());
+        // }
 
-        saveIntoFile(commonQueue);
+        saveIntoFile(toyQueue);
 
     }
 
@@ -68,25 +68,28 @@ public class Main {
     }
 
     public static Queue<Toy> makeQueue(List<Toy> toysList) {
-        Queue<Toy> queue = new PriorityQueue<>(toysList.size(), Comparator.comparingInt(Toy::getFrequency));
-        for (int i = 0; i < toysList.size(); i++) {
-            queue.offer(toysList.get(i));
+        Queue<Toy> queue = new PriorityQueue<>(10, Comparator.comparingInt(Toy::getFrequency));
+        int j = 0;
+        for (int i = 0; i < 10; i++) {
+            if (j == toysList.size()) {
+                j = j - 3;
+            }
+            Toy toy = toysList.get(j);
+            queue.offer(toysList.get(j));
+            System.out.println(toy.getId());
+            j++;
         }
         return queue;
     }
 
-    public static void saveIntoFile(Queue<Toy> commonqueue) {
+    public static void saveIntoFile(Queue<Toy> toyQueue) {
         try (PrintWriter writer = new PrintWriter(new File("result.txt"))) {
-            Random random = new Random();
             for (int i = 0; i < 10; i++) {
-                int randomNumber = random.nextInt();
-                Toy toy = commonqueue.peek();
-                if (toy != null && randomNumber < toy.getFrequency()) {
-                    writer.println(commonqueue.poll().getId());
-                    commonqueue.offer(toy);
-                } else {
-                    writer.println("1");
+                Toy toy = toyQueue.peek();
+                if (toy != null) {
+                    writer.println(toyQueue.poll().getId());
                 }
+                
             }
         } catch (IOException e) {
             e.printStackTrace();
